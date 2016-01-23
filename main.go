@@ -12,10 +12,10 @@ var whiteTurn = true
 var ChessBoard = [][]string{
 	[]string{"bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"},
 	[]string{"bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"},
-	[]string{"-", "-", "-", "-", "-", "-", "-", "-"},
-	[]string{"-", "-", "-", "-", "-", "-", "-", "-"},
-	[]string{"-", "-", "-", "-", "-", "-", "-", "-"},
-	[]string{"-", "-", "-", "-", "-", "-", "-", "-"},
+	[]string{"--", "--", "--", "--", "--", "--", "--", "--"},
+	[]string{"--", "--", "--", "--", "--", "--", "--", "--"},
+	[]string{"--", "--", "--", "--", "--", "--", "--", "--"},
+	[]string{"--", "--", "--", "--", "--", "--", "--", "--"},
 	[]string{"wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"},
 	[]string{"wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"},
 }
@@ -27,42 +27,95 @@ var blackPawns[8]bool
 func main() {
 	initPawns()
 	printBoard()
-	result := chessVerify("e2", "e4")
-	
-	if result == true{
-		fmt.Println("Valid move")
-		printBoard()
+	var result bool
+	var source string
+	var target string
+	fmt.Println("Welcome to chessVerify, please input your chess move and press enter")
+	for{
+		fmt.Scanf("%s %s\n", &source, &target)
+		result = chessVerify(source, target)
 		
-	}else{
-		fmt.Println("Invalid move")
+		if result == true{
+			fmt.Println("Valid move")
+			printBoard()
+			
+		}else{
+			fmt.Println("Invalid move")
+		}
 	}
+	
+	
 }
 
 //returns true if the move is valid otherwise it returns false
 func chessVerify(source string, target string) bool{
 	var sourceCol = source[0]
-	//if a white piece is picked and its blacks turn or if a black piece is picked and its whites turn or if no piece is picked up return false
-	if (whiteTurn == true && sourceCol == 'b') || (whiteTurn == false && sourceCol == 'w') || source == " --"{
-		return false
-	}
-		
-	
 	var sourceRow = source[1]
+	
+	//if a white piece is picked and its blacks turn or if a black piece is picked and its whites turn or if no piece is picked up return false
+	
+	
 	fmt.Printf("%c %c\n", sourceCol, sourceRow)
 	var targetCol = target[0]
 	var targetRow = target[1]
 	
 	//converting to proper format
-	newSourceCol := 8-convertLetter(sourceCol)
+	newSourceCol := convertLetter(sourceCol)
 	newSourceRow := 8-int(sourceRow-'0')
 	
-	newTargetCol := 8-convertLetter(targetCol)
+	newTargetCol := convertLetter(targetCol)
 	newTargetRow := 8-int(targetRow-'0')
 	
-	fmt.Printf("%s\n", ChessBoard[newSourceRow][newSourceCol])
-	fmt.Printf("%s\n", ChessBoard[newTargetRow][newTargetCol])
+
 	
-	makeMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, source)
+	fmt.Printf("newSourceRow %d newSourceCol %d\n", newSourceRow, newSourceCol)
+	fmt.Printf("newTargetRow %d newTargetCol %d\n", newTargetRow, newTargetCol)
+	
+	//identifying the piece that was selected	
+	piece :=  ChessBoard[newSourceRow][newSourceCol]
+	//piece without color specification
+	noColorPiece := fmt.Sprintf("%c", piece[1])
+	colorOnly := fmt.Sprintf("%c", piece[0])
+	fmt.Println(noColorPiece)
+	
+	if (whiteTurn == true && colorOnly == "b") || (whiteTurn == false && colorOnly == "w") || source == "--"{
+		return false
+	}
+	
+	//verifying the piece move
+	switch noColorPiece{
+		case "P":
+			if piece == "wP"{
+				result := whitePawnMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
+				if result == false{
+					return false
+				}
+				
+			}else{
+	
+				result := blackPawnMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
+				if result == false{
+					return false
+				}
+			}
+			break;
+		case "N":
+			break;
+		case "B":
+			break;
+		case "Q":
+			break;
+		case "R":
+			break;
+		case "K":
+			break;
+		default:
+			fmt.Println("Error not valid piece")
+			return false
+			
+	}
+	
+	makeMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece)
 	
 	return true
 }
@@ -78,8 +131,8 @@ func initPawns(){
 //changes chess letter notation to a number a=0, b=1, c=2, etc
 func convertLetter(letter byte) int{
 	switch letter{
-		case 'a':
-		return 0
+		case 'a':        //this is a file on chess board
+			return 0
 		case 'b':
 			return 1
 		case 'c':
@@ -92,20 +145,23 @@ func convertLetter(letter byte) int{
 			return 5
 		case 'g':
 			return 6
-		default:         //this is h on the chess board
+		case 'h':
 			return 7
+		default:        
+			fmt.Println("Invalid file on chess board")
+			return -1
 	}
 	
 			
 }
 
 //makes the chess move on the board, verify the move first
-func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, source string){
+func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece string){
 	
 	//make the source square blank as now the piece is no longer there
-	ChessBoard[sourceRow][sourceCol] = "-"
+	ChessBoard[sourceRow][sourceCol] = "--"
 	//place the piece to its new target square
-	ChessBoard[targetRow][targetCol] = source
+	ChessBoard[targetRow][targetCol] = piece
 	
 	
 	if whiteTurn == true{
@@ -115,13 +171,88 @@ func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, source
 	}
 }
 
-//checks if white pawn move is legal
-func whitepPawnMove(){
+//checks if white pawn move is legal, returns true if legal and false if iillegal
+func whitePawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool{
+	//moving pawn two squares, pawn should be moving on same file
+	if sourceRow-targetRow == 2 && sourceCol == targetCol{
+		
+		//if the pawns already moved two squares on their first move then they can't move two squares again
+		if whitePawns[sourceCol] == true{
+			fmt.Println("You already moved the white pawn two squares.")
+			return false
+		}
+		//checking if any piece blocks the path of the pawn trying to advance two squares
+		if ChessBoard[sourceRow-1][sourceCol] != "--" || ChessBoard[sourceRow-2][sourceCol] != "--"{
+
+			fmt.Println("There is a piece blocking the white pawn move.")
+			return false
+		}
 	
+		
+	//moving pawn one square or a pawn capture	
+	}else if sourceRow-targetRow == 1{
+		
+		//determine if its a pawn capture or not, if this is a one square pawn move check if the destination is empty
+		if sourceCol == targetCol && ChessBoard[sourceRow-1][sourceCol] == "--"{
+			fmt.Println("White Pawn moves one square forward.")
+			//then its a diagonal pawn capture
+		}else if (sourceCol-targetCol == 1 || sourceCol-targetCol == -1) && ChessBoard[targetRow][targetCol] != "--"{
+			fmt.Println("White pawn captures.")
+		}else{
+			//add a check for en passent later
+			fmt.Println("Invalid pawn move")
+			return false
+		}
+	}else{
+		fmt.Println("Invalid pawn move")
+		return false
+	}
+	//mark the pawn has moved and can't be moved two squares again
+	whitePawns[sourceCol] = true
+	return true
 }
 
-func blackPawnMove(){
+func blackPawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool{
+	//moving pawn two squares, pawn should be moving on same file
+	if targetRow-sourceRow == 2 && sourceCol == targetCol{
+		
+		//if the pawns already moved two squares on their first move then they can't move two squares again
+		if blackPawns[sourceCol] == true{
+			fmt.Println("You already moved the black pawn two squares.")
+			return false
+		}
+		//checking if any piece blocks the path of the pawn trying to advance two squares
+		if ChessBoard[sourceRow+1][sourceCol] != "--" || ChessBoard[sourceRow+2][sourceCol] != "--"{
+
+			fmt.Println("There is a piece blocking the black pawn move.")
+			return false
+		}
+		
+		
+	//moving pawn one square or a pawn capture	
+	}else if targetRow-sourceRow == 1{
+		
+		//determine if its a pawn capture or not, if this is a one square pawn move check if the destination is empty
+		if sourceCol == targetCol && ChessBoard[sourceRow+1][sourceCol] == "--"{
+			fmt.Println("Black Pawn moves one square forward.")
+			
+			//then its a diagonal pawn capture
+		}else if (targetCol-sourceCol == 1 || targetCol-sourceCol == -1) && ChessBoard[targetRow][targetCol] != "--"{
+			fmt.Println("Black pawn captures.")
+		}else{
+			//add a check for en passent later
+			fmt.Println("Invalid pawn move")
+			return false
+		}
+	}else{
+		fmt.Println("Invalid pawn move")
+		return false
+	}
 	
+	//mark the pawn has moved two squares and can't be moved two squares again
+	blackPawns[sourceCol] = true
+	
+	return true
 }
 
 func printBoard() {

@@ -1,2 +1,2 @@
-# gophermadness
+# chessVerify
 chessVerify

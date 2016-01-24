@@ -2,7 +2,7 @@
 This project is for the Gopher Gala 2016.
 
 chessVerify is a chess move validator. This can be used in the back end of applications to check if chess moves are legal.
-chessVerify also can detect harmful or garbage input. It supports en-passent, castling for kingside and queenside and auto pawn promotion to queen.
+chessVerify also can detect harmful or garbage input. It supports checks, en-passent, castling kingside, castling queenside and auto pawn promotion to queen.
 
 Input should be entered with starting location square to destination square. So Ruy Lopez opening would go like this:
 e2 e4

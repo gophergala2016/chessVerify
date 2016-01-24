@@ -1,3 +1,6 @@
+// Jonathan Chin
+// 1/24/2016
+// Gopher Gala 2016
 // verify if chess move is legal by using source and target notation Ex: e2 e4
 package main
 

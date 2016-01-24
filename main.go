@@ -70,15 +70,13 @@ func chessVerify(source string, target string) bool {
 
 	fmt.Printf("newSourceRow %d newSourceCol %d\n", newSourceRow, newSourceCol)
 	fmt.Printf("newTargetRow %d newTargetCol %d\n", newTargetRow, newTargetCol)
-	
-	
-	
+
 	//ensuring a digit is entered into the ChessBoard array to prevent index out of range
-	if newSourceRow < 0 || newSourceRow > 7 || newSourceCol < 0 || newSourceCol > 7 || newTargetRow < 0 || newTargetRow > 7 || newTargetCol < 0 || newTargetCol > 7{
+	if newSourceRow < 0 || newSourceRow > 7 || newSourceCol < 0 || newSourceCol > 7 || newTargetRow < 0 || newTargetRow > 7 || newTargetCol < 0 || newTargetCol > 7 {
 		fmt.Println("Invalid input")
 		return false
-	} 
-	
+	}
+
 	//identifying the piece that was selected
 	piece := ChessBoard[newSourceRow][newSourceCol]
 	//piece without color specification
@@ -92,7 +90,7 @@ func chessVerify(source string, target string) bool {
 	//checking to make sure player doesn't capture his own pieces
 	targetSquare := ChessBoard[newTargetRow][newTargetCol]
 	targetColor := fmt.Sprintf("%c", targetSquare[0])
-	if colorOnly == targetColor{
+	if colorOnly == targetColor {
 		fmt.Println("You can't capture your own piece.")
 		return false
 	}
@@ -112,25 +110,25 @@ func chessVerify(source string, target string) bool {
 				return false
 			}
 		}
-		
+
 	case "N":
 		result := knightMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-	
+
 	case "B":
 		result := bishopMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-	
+
 	case "Q":
 		result := queenMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-	
+
 	case "R":
 		result := rookMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
@@ -142,7 +140,7 @@ func chessVerify(source string, target string) bool {
 		if result == false {
 			return false
 		}
-	
+
 	default:
 		fmt.Println("Error not valid piece")
 		return false
@@ -153,7 +151,6 @@ func chessVerify(source string, target string) bool {
 
 	return true
 }
-
 
 //changes chess letter notation to a number a=0, b=1, c=2, etc
 func convertLetter(letter byte) int {
@@ -183,24 +180,23 @@ func convertLetter(letter byte) int {
 
 //makes the chess move on the board, verify the move first
 func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece string) {
-	
+
 	//make the source square blank as now the piece is no longer there
 	ChessBoard[sourceRow][sourceCol] = "--"
 	//if pawn reaches the 8th or 1st rank auto promote to queen for now
-	
-	if targetRow == 0 && piece == "wP"{
-		ChessBoard[targetRow][targetCol] = "wQ"   //white queen promotion
-	}else if targetRow == 7 && piece == "bP"{
-		ChessBoard[targetRow][targetCol] = "bQ"   //black queen promtion
-	}else{
-		ChessBoard[targetRow][targetCol] = piece  //place the piece to its new target square
+
+	if targetRow == 0 && piece == "wP" {
+		ChessBoard[targetRow][targetCol] = "wQ" //white queen promotion
+	} else if targetRow == 7 && piece == "bP" {
+		ChessBoard[targetRow][targetCol] = "bQ" //black queen promtion
+	} else {
+		ChessBoard[targetRow][targetCol] = piece //place the piece to its new target square
 	}
-	 
+
 	switchTurns()
-	
 }
 
-func switchTurns(){
+func switchTurns() {
 	if whiteTurn == true {
 		whiteTurn = false
 	} else {

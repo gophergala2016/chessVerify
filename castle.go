@@ -1,18 +1,18 @@
 package main
 
 //can't castle in check or through check, can't castle when king has already moved
-func canWhiteCastleKing(){
-	
+func canWhiteCastleKing() {
+
 }
 
-func canBlackCastleKing(){
-	
+func canBlackCastleKing() {
+
 }
 
-func canWhiteCastleQueen(){
-	
+func canWhiteCastleQueen() {
+
 }
 
-func canBlackCastleQueen(){
-	
+func canBlackCastleQueen() {
+
 }

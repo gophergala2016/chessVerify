@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-
 //intitalize all pawns to false as they have not moved yet, and also initialize all en passent to false
 func initPawns() {
 	for i := 0; i < 8; i++ {
@@ -31,9 +30,9 @@ func whitePawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) b
 			return false
 			//enabling enpassent for the other player if there is pawn on either side
 		}
-		if ChessBoard[targetRow][targetCol-1] == "bP" {
+		if targetCol-1 >= 0 && ChessBoard[targetRow][targetCol-1] == "bP" {
 			blackPass[targetCol-1] = true
-		} else if ChessBoard[targetRow][targetCol+1] == "bP" {
+		} else if targetCol+1 <= 7 && ChessBoard[targetRow][targetCol+1] == "bP" {
 			blackPass[targetCol+1] = true
 		}
 		//mark the pawn has moved and can't be moved two squares again
@@ -41,7 +40,7 @@ func whitePawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) b
 
 		//moving pawn one square or a pawn capture
 	} else if sourceRow-targetRow == 1 {
-		
+
 		//determine if its a pawn capture or not, if this is a one square pawn move check if the destination is empty
 		if sourceRow-1 >= 0 && sourceCol == targetCol && ChessBoard[sourceRow-1][sourceCol] == "--" {
 			fmt.Println("White Pawn moves one square forward.")
@@ -79,7 +78,7 @@ func blackPawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) b
 			fmt.Println("You already moved the black pawn two squares.")
 			return false
 			//checking if any piece blocks the path of the pawn trying to advance two squares
-		} else if (sourceRow+1 <= 7 && ChessBoard[sourceRow+1][sourceCol] != "--" ) || (sourceRow+2 <= 7 && ChessBoard[sourceRow+2][sourceCol] != "--") {
+		} else if (sourceRow+1 <= 7 && ChessBoard[sourceRow+1][sourceCol] != "--") || (sourceRow+2 <= 7 && ChessBoard[sourceRow+2][sourceCol] != "--") {
 
 			fmt.Println("There is a piece blocking the black pawn move.")
 			return false
@@ -87,7 +86,7 @@ func blackPawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) b
 		//enabling en passent for other player
 		if targetCol-1 >= 0 && ChessBoard[targetRow][targetCol-1] == "wP" {
 			whitePass[targetCol-1] = true
-		} else if targetCol+1<=7 && ChessBoard[targetRow][targetCol+1] == "wP" {
+		} else if targetCol+1 <= 7 && ChessBoard[targetRow][targetCol+1] == "wP" {
 			whitePass[targetCol+1] = true
 		}
 		//mark the pawn has moved two squares and can't be moved two squares again
@@ -127,16 +126,16 @@ func blackPawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) b
 }
 
 //enPassent expires for the color if they don't make a move
-func passExpireWhite(){
+func passExpireWhite() {
 	//setting all the values in the map
-	for index, _ := range whitePass{
+	for index, _ := range whitePass {
 		whitePass[index] = false
 	}
 }
 
-func passExpireBlack(){
+func passExpireBlack() {
 	//setting all the values to false
-	for index, _ := range blackPass{
+	for index, _ := range blackPass {
 		blackPass[index] = false
 	}
 }

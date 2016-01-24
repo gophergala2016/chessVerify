@@ -52,7 +52,7 @@ func main() {
 
 //returns true if the move is valid otherwise it returns false
 func chessVerify(source string, target string) bool {
-	if len(source) != 2{
+	if len(source) != 2 {
 		fmt.Println("Invalid input length")
 		return false
 	}
@@ -61,9 +61,8 @@ func chessVerify(source string, target string) bool {
 
 	//if a white piece is picked and its blacks turn or if a black piece is picked and its whites turn or if no piece is picked up return false
 
-	fmt.Printf("%c %c\n", sourceCol, sourceRow)
 	//checking length to ensure no index out of range error
-	if len(target) != 2{
+	if len(target) != 2 {
 		fmt.Println("Invalid input length")
 		return false
 	}
@@ -77,9 +76,6 @@ func chessVerify(source string, target string) bool {
 	newTargetCol := convertLetter(targetCol)
 	newTargetRow := 8 - int(targetRow-'0')
 
-	fmt.Printf("newSourceRow %d newSourceCol %d\n", newSourceRow, newSourceCol)
-	fmt.Printf("newTargetRow %d newTargetCol %d\n", newTargetRow, newTargetCol)
-
 	//ensuring a digit is entered into the ChessBoard array to prevent index out of range
 	if newSourceRow < 0 || newSourceRow > 7 || newSourceCol < 0 || newSourceCol > 7 || newTargetRow < 0 || newTargetRow > 7 || newTargetCol < 0 || newTargetCol > 7 {
 		fmt.Println("Invalid input")
@@ -91,19 +87,19 @@ func chessVerify(source string, target string) bool {
 	//piece without color specification
 	noColorPiece := piece[1:2]
 	colorOnly := piece[0:1]
-	fmt.Println(noColorPiece)
 
 	if (whiteTurn == true && colorOnly == "b") || (whiteTurn == false && colorOnly == "w") || source == "--" {
 		return false
 	}
 	//checking to make sure player doesn't capture his own pieces
 	targetSquare := ChessBoard[newTargetRow][newTargetCol]
-	targetColor :=  targetSquare[0:1]
-	
+	targetColor := targetSquare[0:1]
+
 	if colorOnly == targetColor {
 		fmt.Println("You can't capture your own piece.")
 		return false
 	}
+
 	//verifying the piece move
 	switch noColorPiece {
 	case "P":
@@ -149,6 +145,8 @@ func chessVerify(source string, target string) bool {
 		result := kingMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
+		} else { //if its valid king move then update coordinates in the global variables which keeps track of kings location
+			kingUpdate = true
 		}
 
 	default:
@@ -157,8 +155,30 @@ func chessVerify(source string, target string) bool {
 
 	}
 
-	makeMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece)
-
+	capturedPiece := makeMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece)
+	//if the player made a move and his king can be captured that move has to be undone and return false as he didn't stop the check
+	if whiteTurn == true && isWhiteInCheck() == true {
+		undoMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece, capturedPiece)
+		fmt.Println("White cannot make that move as they are in check")
+		return false
+	} else if whiteTurn == false && isBlackInCheck() == true {
+		undoMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece, capturedPiece)
+		fmt.Println("Black cannot make that move as they are in check")
+		return false
+	}
+	if kingUpdate == true {
+		if colorOnly == "b" {
+			blackKingX = newTargetRow
+			blackKingY = newTargetCol
+		} else if colorOnly == "w" {
+			whiteKingX = newTargetRow
+			whiteKingY = newTargetCol
+		} else {
+			fmt.Println("Invalid king color")
+		}
+		kingUpdate = false
+	}
+	switchTurns()
 	return true
 }
 
@@ -188,9 +208,10 @@ func convertLetter(letter byte) int {
 
 }
 
-//makes the chess move on the board, verify the move first
-func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece string) {
+//makes the chess move on the board, verify the move first, returns captured piece as a string to be used in case of a move undo
+func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece string) string {
 
+	capturedPiece := ChessBoard[sourceRow][sourceCol]
 	//make the source square blank as now the piece is no longer there
 	ChessBoard[sourceRow][sourceCol] = "--"
 	//if pawn reaches the 8th or 1st rank auto promote to queen for now
@@ -202,8 +223,8 @@ func makeMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece 
 	} else {
 		ChessBoard[targetRow][targetCol] = piece //place the piece to its new target square
 	}
+	return capturedPiece
 
-	switchTurns()
 }
 
 func switchTurns() {
@@ -240,5 +261,17 @@ func initGame() {
 	wqrMoved = false
 	bkrMoved = false
 	bqrMoved = false
-	
+	//storing coordinates for starting location of both kings, X is row and Y is col
+	whiteKingX = 7
+	whiteKingY = 4
+	blackKingX = 0
+	blackKingY = 4
+
+	kingUpdate = false
+}
+
+//undo a move if a player makes a move and doesn't stop check
+func undoMove(sourceRow int, sourceCol int, targetRow int, targetCol int, piece string, capturedPiece string) {
+	ChessBoard[sourceRow][sourceCol] = piece
+	ChessBoard[targetRow][targetCol] = capturedPiece
 }

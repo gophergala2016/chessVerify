@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-
 //checks if white pawn move is legal, returns true if legal and false if iillegal
 func whitePawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
 	//moving pawn two squares, pawn should be moving on same file

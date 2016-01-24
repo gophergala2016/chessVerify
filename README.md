@@ -1,5 +1,5 @@
 # chessVerify
-This project is for the Gopher Gala 2016.
+This project is for the Gopher Gala 2016 - A 48 hour hackathon
 
 chessVerify is a chess move validator. This can be used in the back end of applications to check if chess moves are legal.
 chessVerify also can detect harmful or garbage input. It supports checks, en-passent, castling kingside, castling queenside and auto pawn promotion to queen.

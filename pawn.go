@@ -4,15 +4,6 @@ import (
 	"fmt"
 )
 
-//intitalize all pawns to false as they have not moved yet, and also initialize all en passent to false
-func initPawns() {
-	for i := 0; i < 8; i++ {
-		whitePawns[i] = false
-		blackPawns[i] = false
-		whitePass[i] = false
-		blackPass[i] = false
-	}
-}
 
 //checks if white pawn move is legal, returns true if legal and false if iillegal
 func whitePawnMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {

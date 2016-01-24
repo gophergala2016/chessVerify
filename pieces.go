@@ -3,9 +3,19 @@ package main
 import (
 	"fmt"
 )
+//if king moved or not
+var wkMoved bool
+var bkMoved bool
+
+var wkrMoved bool
+var wqrMoved bool
+var bkrMoved bool
+var bqrMoved bool
 
 func knightMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
 	if (targetRow-sourceRow == 2 || targetRow-sourceRow == -2) && (targetCol-sourceCol == 1 || targetCol-sourceCol == -1) {
+		return true
+	}else if (targetRow-sourceRow == 1 || targetRow-sourceRow == -1) && (targetCol-sourceCol == 2 || targetCol-sourceCol == -2){
 		return true
 	}
 	return false
@@ -151,9 +161,23 @@ func rookMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
 		fmt.Println("Invalid rook move")	
 		return false
 	}
+	wkrMoved = true  //used to determine if white can still castle king side
 	return true
 }
 //if king moves two spaces to right as white it checks for kingside castle, three spaces to the left as white checks for white queen castle
 func kingMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
-	return true
+	if sourceRow == targetRow && (sourceCol-targetCol==1 || sourceCol-targetCol == -1){ //left or right
+		wkMoved = true
+		return true  //make sure king doesn't walk into check, have a function which checks a color if it can attack that square
+	}else if sourceCol == targetCol && (sourceRow-targetRow==1 || sourceRow-targetRow == -1){  //up or down
+		wkMoved = true
+		return true
+	}else if (sourceCol-targetCol==1 || sourceCol-targetCol== -1) && (sourceRow-targetRow == 1 || sourceRow-targetRow == -1){  //diagonals
+		wkMoved = true
+		return true
+	}else if ChessBoard[sourceRow][sourceCol] == "wK" && wkMoved == false && wkrMoved == false{ //white king castle
+		fmt.Println("White kingside castle")
+	}
+	fmt.Println("Invalid king move")
+	return false
 }

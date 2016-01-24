@@ -29,7 +29,7 @@ var blackPass [8]bool
 
 func main() {
 
-	initPawns()
+	initGame()
 	printBoard()
 	var result bool
 	var source string
@@ -52,12 +52,21 @@ func main() {
 
 //returns true if the move is valid otherwise it returns false
 func chessVerify(source string, target string) bool {
+	if len(source) != 2{
+		fmt.Println("Invalid input length")
+		return false
+	}
 	var sourceCol = source[0]
 	var sourceRow = source[1]
 
 	//if a white piece is picked and its blacks turn or if a black piece is picked and its whites turn or if no piece is picked up return false
 
 	fmt.Printf("%c %c\n", sourceCol, sourceRow)
+	//checking length to ensure no index out of range error
+	if len(target) != 2{
+		fmt.Println("Invalid input length")
+		return false
+	}
 	var targetCol = target[0]
 	var targetRow = target[1]
 
@@ -80,8 +89,8 @@ func chessVerify(source string, target string) bool {
 	//identifying the piece that was selected
 	piece := ChessBoard[newSourceRow][newSourceCol]
 	//piece without color specification
-	noColorPiece := fmt.Sprintf("%c", piece[1])
-	colorOnly := fmt.Sprintf("%c", piece[0])
+	noColorPiece := piece[1:2]
+	colorOnly := piece[0:1]
 	fmt.Println(noColorPiece)
 
 	if (whiteTurn == true && colorOnly == "b") || (whiteTurn == false && colorOnly == "w") || source == "--" {
@@ -89,7 +98,8 @@ func chessVerify(source string, target string) bool {
 	}
 	//checking to make sure player doesn't capture his own pieces
 	targetSquare := ChessBoard[newTargetRow][newTargetCol]
-	targetColor := fmt.Sprintf("%c", targetSquare[0])
+	targetColor :=  targetSquare[0:1]
+	
 	if colorOnly == targetColor {
 		fmt.Println("You can't capture your own piece.")
 		return false
@@ -212,4 +222,23 @@ func printBoard() {
 		}
 		fmt.Printf("\n")
 	}
+}
+
+//intitalize all pawns to false as they have not moved yet, and also initialize all en passent to false
+func initGame() {
+	for i := 0; i < 8; i++ {
+		whitePawns[i] = false
+		blackPawns[i] = false
+		whitePass[i] = false
+		blackPass[i] = false
+	}
+	//castling rights init for kings
+	wkMoved = false
+	bkMoved = false
+	//castling rights int for rooks
+	wkrMoved = false
+	wqrMoved = false
+	bkrMoved = false
+	bqrMoved = false
+	
 }

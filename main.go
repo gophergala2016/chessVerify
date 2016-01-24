@@ -70,7 +70,15 @@ func chessVerify(source string, target string) bool {
 
 	fmt.Printf("newSourceRow %d newSourceCol %d\n", newSourceRow, newSourceCol)
 	fmt.Printf("newTargetRow %d newTargetCol %d\n", newTargetRow, newTargetCol)
-
+	
+	
+	
+	//ensuring a digit is entered into the ChessBoard array to prevent index out of range
+	if newSourceRow < 0 || newSourceRow > 7 || newSourceCol < 0 || newSourceCol > 7 || newTargetRow < 0 || newTargetRow > 7 || newTargetCol < 0 || newTargetCol > 7{
+		fmt.Println("Invalid input")
+		return false
+	} 
+	
 	//identifying the piece that was selected
 	piece := ChessBoard[newSourceRow][newSourceCol]
 	//piece without color specification
@@ -81,7 +89,13 @@ func chessVerify(source string, target string) bool {
 	if (whiteTurn == true && colorOnly == "b") || (whiteTurn == false && colorOnly == "w") || source == "--" {
 		return false
 	}
-
+	//checking to make sure player doesn't capture his own pieces
+	targetSquare := ChessBoard[newTargetRow][newTargetCol]
+	targetColor := fmt.Sprintf("%c", targetSquare[0])
+	if colorOnly == targetColor{
+		fmt.Println("You can't capture your own piece.")
+		return false
+	}
 	//verifying the piece move
 	switch noColorPiece {
 	case "P":
@@ -98,37 +112,37 @@ func chessVerify(source string, target string) bool {
 				return false
 			}
 		}
-		break
+		
 	case "N":
 		result := knightMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-		break
+	
 	case "B":
 		result := bishopMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-		break
+	
 	case "Q":
 		result := queenMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-		break
+	
 	case "R":
 		result := rookMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-		break
+
 	case "K":
 		result := kingMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
 		}
-		break
+	
 	default:
 		fmt.Println("Error not valid piece")
 		return false

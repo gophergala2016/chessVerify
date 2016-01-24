@@ -5,10 +5,10 @@ chessVerify is a chess move validator. This can be used in the back end of appli
 chessVerify also can detect harmful or garbage input. It supports checks, en-passent, castling kingside, castling queenside and auto pawn promotion to queen.
 
 Input should be entered with starting location square to destination square. So Ruy Lopez opening would go like this:
-e2 e4
-e7 e5
-g1 f3
-b8 c6
-f1 g5
+e2 e4 <br />
+e7 e5 <br />
+g1 f3 <br />
+b8 c6 <br />
+f1 g5 <br />
 
 ![Alt text](/img/ruylopez.jpg?raw=true "Ruy Lopez Opening")

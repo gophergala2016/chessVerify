@@ -142,8 +142,8 @@ func chessVerify(source string, target string) bool {
 		result := rookMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol)
 		if result == false {
 			return false
-		}else{
-			rookUpdate = true  //used to indicate if a rook has moved, used for castling rights
+		} else {
+			rookUpdate = true //used to indicate if a rook has moved, used for castling rights
 		}
 
 	case "K":
@@ -161,7 +161,7 @@ func chessVerify(source string, target string) bool {
 	}
 
 	capturedPiece := makeMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece)
-	
+
 	//if the player made a move and his king can be captured that move has to be undone and return false as he didn't stop the check
 	if whiteTurn == true && isWhiteInCheck() == true {
 		undoMove(newSourceRow, newSourceCol, newTargetRow, newTargetCol, piece, capturedPiece)
@@ -176,25 +176,25 @@ func chessVerify(source string, target string) bool {
 		if colorOnly == "b" {
 			blackKingX = newTargetRow
 			blackKingY = newTargetCol
-			bkMoved = true  //can no longer castle with black king
+			bkMoved = true //can no longer castle with black king
 		} else if colorOnly == "w" {
 			whiteKingX = newTargetRow
 			whiteKingY = newTargetCol
-			wkMoved = true   //can no longer castle with white king
+			wkMoved = true //can no longer castle with white king
 		} else {
 			fmt.Println("Invalid king color")
 		}
 		kingUpdate = false
 	}
-	
-	if rookUpdate == true{
-		if piece == "bR" && newSourceRow == 0 && newSourceCol== 0{ //black queen rook
+
+	if rookUpdate == true {
+		if piece == "bR" && newSourceRow == 0 && newSourceCol == 0 { //black queen rook
 			bqrMoved = true
-		}else if piece == "bR" && newSourceRow == 0 && newSourceCol== 7{ //black king rook
+		} else if piece == "bR" && newSourceRow == 0 && newSourceCol == 7 { //black king rook
 			bkrMoved = true
-		}else if piece == "wR" && newSourceRow == 7 && newSourceCol== 0{ //white queen rook
+		} else if piece == "wR" && newSourceRow == 7 && newSourceCol == 0 { //white queen rook
 			wqrMoved = true
-		}else if piece == "wR" && newSourceRow == 7 && newSourceCol== 7{ //white king rook move
+		} else if piece == "wR" && newSourceRow == 7 && newSourceCol == 7 { //white king rook move
 			wkrMoved = true
 		}
 		rookUpdate = false

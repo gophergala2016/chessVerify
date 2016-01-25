@@ -173,7 +173,7 @@ func rookMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
 		fmt.Println("Invalid rook move")
 		return false
 	}
-	
+
 	return true
 }
 
@@ -190,23 +190,23 @@ func kingMove(sourceRow int, sourceCol int, targetRow int, targetCol int) bool {
 		ChessBoard[7][7] = "--" //removing rook off of h file
 		ChessBoard[7][5] = "wR" //moving rook as well
 		return true
-	}else if ChessBoard[sourceRow][sourceCol] == "wK" && ChessBoard[7][1] == "--" && ChessBoard[7][2] == "--" && ChessBoard[7][3] == "--" && sourceRow == targetRow && sourceCol-targetCol == 2 && canWhiteCastleQueen() == true  { //white queen castle
+	} else if ChessBoard[sourceRow][sourceCol] == "wK" && ChessBoard[7][1] == "--" && ChessBoard[7][2] == "--" && ChessBoard[7][3] == "--" && sourceRow == targetRow && sourceCol-targetCol == 2 && canWhiteCastleQueen() == true { //white queen castle
 		fmt.Println("White queenside castle")
-		ChessBoard[7][0] = "--" //removing rook off of h file
+		ChessBoard[7][0] = "--" //removing rook off of a file
 		ChessBoard[7][3] = "wR" //moving rook as well
 		return true
-	}else if ChessBoard[sourceRow][sourceCol] == "bK" && ChessBoard[0][6] == "--" && ChessBoard[0][5] == "--" && sourceRow == targetRow && targetCol-sourceCol == 2 && canBlackCastleKing() == true{ //black king castle
+	} else if ChessBoard[sourceRow][sourceCol] == "bK" && ChessBoard[0][6] == "--" && ChessBoard[0][5] == "--" && sourceRow == targetRow && targetCol-sourceCol == 2 && canBlackCastleKing() == true { //black king castle
 		fmt.Println("Black kingside castle")
 		ChessBoard[0][7] = "--" //removing rook off of h file
 		ChessBoard[0][5] = "bR" //moving rook as well
 		return true
-	}else if ChessBoard[sourceRow][sourceCol] == "bK" && ChessBoard[0][1] == "--" && ChessBoard[0][2] == "--" && ChessBoard[0][3] == "--" && sourceRow == targetRow && sourceCol-targetCol == 2 && canBlackCastleQueen() == true{ //black queenside castle
+	} else if ChessBoard[sourceRow][sourceCol] == "bK" && ChessBoard[0][1] == "--" && ChessBoard[0][2] == "--" && ChessBoard[0][3] == "--" && sourceRow == targetRow && sourceCol-targetCol == 2 && canBlackCastleQueen() == true { //black queenside castle
 		fmt.Println("Black queenside castle")
-		ChessBoard[0][0] = "--" //removing rook off of h file
+		ChessBoard[0][0] = "--" //removing rook off of a file
 		ChessBoard[0][3] = "bR" //moving rook as well
 		return true
 	}
-	
+
 	fmt.Println("Invalid king move")
 	return false
 }

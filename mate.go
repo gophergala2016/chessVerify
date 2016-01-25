@@ -22,24 +22,6 @@ func isBlackInCheck() bool {
 	return false
 }
 
-//if white has no legal moves its stalemate
-func isWhiteStaleMate() {
-
-}
-
-func isBlackStaleMate() {
-
-}
-
-//if white's king is in check and he has no squares to run too
-func isWhiteMated() {
-
-}
-
-func isBlackMated() {
-
-}
-
 //checks if a square is attacked by white in one turn, used to identify check and checkmates
 func canWhiteKillSquare(targetRow int, targetCol int) bool {
 	for i := 0; i < 8; i++ {
